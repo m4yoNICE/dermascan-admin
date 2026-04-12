@@ -1,0 +1,17 @@
+export const SKIN_CONDITIONS = [
+  { id: 1, label: "acne-blackheads" },
+  { id: 2, label: "acne-cyst" },
+  { id: 3, label: "acne-fungal" },
+  { id: 4, label: "acne-nodules" },
+  { id: 5, label: "acne-papules" },
+  { id: 6, label: "acne-pustules" },
+  { id: 7, label: "acne-whiteheads" },
+  { id: 8, label: "mild eczema" },
+  { id: 9, label: "severe eczema" },
+  { id: 10, label: "enlarged-pores" },
+  { id: 11, label: "melasma" },
+  { id: 12, label: "milia" },
+  { id: 13, label: "post-inflammatory-erythema" },
+  { id: 14, label: "post-inflammatory-pigmentation" },
+  { id: 15, label: "psoriasis" },
+];
