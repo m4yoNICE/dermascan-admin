@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:3000";
+const baseURL = "https://dermascan-backend.up.railway.app";
 
 //erased content type as Axios can automatically assing what content type is passed through
 // we can switch between formdata vs json
