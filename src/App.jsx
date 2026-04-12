@@ -1,12 +1,12 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import LoginAdmin from "./pages/auth/LoginAdmin.jsx";
-import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import UsersPage from "./pages/admin/UserPage.jsx";
-import Analytics from "./pages/admin/Analytics.jsx";
-import Main from "./pages/Main.jsx";
-import Product from "./pages/admin/product-table/Product.jsx";
+import LoginAdmin from "./Pages/auth/LoginAdmin.jsx";
+import AdminDashboard from "./Pages/admin/AdminDashboard.jsx";
+import UsersPage from "./Pages/admin/UserPage.jsx";
+import Analytics from "./Pages/admin/Analytics.jsx";
+import Main from "./Pages/Main.jsx";
+import Product from "./Pages/admin/product-table/Product.jsx";
 import OOS from "./Pages/admin/analysis-table/outOfScope.jsx";
 import Analysis from "./Pages/admin/analysis-table/AnalysisPage.jsx";
 
