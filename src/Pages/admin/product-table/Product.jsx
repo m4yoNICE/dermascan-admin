@@ -87,74 +87,60 @@ const Product = () => {
     {
       key: "productName",
       label: "Product Name",
-      width: "160px",
+      width: "200px",
       render: (value) => (
-        <span className="block truncate max-w-[140px]" title={value}>
+        <span className="block truncate" title={value}>
           {value || "N/A"}
         </span>
       ),
     },
     {
+      key: "productBrand",
+      label: "Brand",
+      width: "120px",
+      render: (value) => (value && value !== "NULL" ? value : "-"),
+    },
+    {
       key: "productType",
       label: "Type",
-      width: "100px",
+      width: "110px",
     },
     {
       key: "timeRoutine",
-      label: "Routine",
-      width: "100px",
+      label: "Time",
+      width: "110px",
     },
     {
-      key: "conditionIds",
-      label: "Conditions",
-      width: "200px",
-      render: (value) => {
-        if (!value || value.length === 0)
-          return <span className="text-gray-400 text-xs">None</span>;
-        const visible = value.slice(0, 2);
-        const remaining = value.length - 2;
-        return (
-          <div className="flex flex-wrap gap-1">
-            {visible.map((id) => {
-              const condition = conditions.find((c) => c.id === id);
-              return (
-                <span
-                  key={id}
-                  className="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full"
-                >
-                  {condition ? condition.condition : id}
-                </span>
-              );
-            })}
-            {remaining > 0 && (
-              <span className="px-1.5 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">
-                +{remaining} more
-              </span>
-            )}
-          </div>
-        );
-      },
+      key: "routine",
+      label: "Routine Label",
+      width: "150px",
+      render: (value) => (value && value !== "NULL" ? value : "-"),
+    },
+    {
+      key: "dermaTested",
+      label: "Derma Tested",
+      width: "110px",
+      render: (value) => (
+        <span
+          className={`px-2 py-1 text-xs font-medium rounded-full ${
+            value ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+          }`}
+        >
+          {value ? "Yes" : "No"}
+        </span>
+      ),
     },
     {
       key: "createdAt",
       label: "Created At",
       width: "110px",
-      render: (value, row) => {
-        if (!row.createdAt || row.createdAt === "0001-01-01 00:00:00.000")
-          return "-";
-        const date = new Date(row.createdAt);
-        return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()}`;
-      },
-    },
-    {
-      key: "updatedAt",
-      label: "Last Updated",
-      width: "110px",
-      render: (value, row) => {
-        if (!row.updatedAt || row.updatedAt === "0001-01-01 00:00:00.000")
-          return "-";
-        const date = new Date(row.updatedAt);
-        return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()}`;
+      render: (value) => {
+        if (!value || value === "0001-01-01 00:00:00.000") return "-";
+        return new Date(value).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
       },
     },
     {

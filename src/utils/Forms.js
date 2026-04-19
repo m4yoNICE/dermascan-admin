@@ -10,6 +10,7 @@ export function buildProductFormData(formData) {
   data.append("availableIn", formData.availableIn || "");
   data.append("skinType", formData.skinType);
   data.append("dermaTested", formData.dermaTested);
+  data.append("routine", formData.routine || "");
   data.append("timeRoutine", formData.timeRoutine);
   data.append("conditionIds", JSON.stringify(formData.conditionIds || []));
   if (formData.productImage) {

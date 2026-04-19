@@ -63,25 +63,26 @@ const Api = {
     return Http.get("/api/admin/skin-types/getSkinTypes", config);
   },
 
-
   getSkinConditions: (config = {}) => {
     return Http.get("/api/admin/skin-types/skinConditions", config);
   },
 
   // Get User count and condition counts for dashboard stats
   getUserCount: () => Http.get("/api/admin/users/count"),
-// Get condition counts for dashboard stats
+  // Get condition counts for dashboard stats
   getConditionCounts: () => Http.get("/api/admin/products/getConditionCounts"),
-// Get condition counts by product for dashboard stats
-  getConditionCountsByProduct: () => Http.get("/api/admin/products/getConditionCountsByProduct"),
-//
+  // Get condition counts by product for dashboard stats
+  getConditionCountsByProduct: () =>
+    Http.get("/api/admin/products/getConditionCountsByProduct"),
+  //
   getRecommendationNoData: () => Http.get("/api/admin/scope/no-recommendation"),
 
   getAnalysisData: () => Http.get("/api/admin/analysis"),
   getConditions: () => Http.get("/api/admin/analysis/condition"),
 
   // Get all product images for dashboard stats
-  getAllProductImages: () => Http.get("/api/admin/products/getAllProductImages"),
+  getAllProductImages: () =>
+    Http.get("/api/admin/products/getAllProductImages"),
 
   // Generate reports endpoint
   generateProductReport: () => {
@@ -104,7 +105,9 @@ const Api = {
   getConditions: () => Http.get("/api/admin/analysis/condition"),
 
   getSkinImage: (data) =>
-    Http.defaults.baseURL + "/api/uploads/skin-images/" + data,
+    data?.startsWith("http")
+      ? data
+      : Http.defaults.baseURL + "/api/uploads/skin-images/" + data,
   getProductImage: (data) =>
     data?.startsWith("http")
       ? data

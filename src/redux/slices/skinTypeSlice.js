@@ -54,9 +54,9 @@ const skinTypeSlice = createSlice({
       })
       .addCase(getSkinConditions.fulfilled, (state, action) => {
         state.loading = false;
-        state.skinConditions = action.payload.map(item => ({
+        state.skinConditions = action.payload.map((item) => ({
           id: item.id,
-          conditon: item.condition,
+          condition: item.condition,
         }));
       })
       .addCase(getSkinConditions.rejected, (state, action) => {

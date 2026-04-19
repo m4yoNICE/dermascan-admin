@@ -31,28 +31,13 @@ const AnalysisPage = () => {
 
   const columns = [
     {
-      key: "id",
-      label: "ID",
-      width: "80px",
-    },
-    {
-      key: "email",
-      label: "Email",
-      width: "200px",
-      render: (value) => (
-        <span className="block truncate max-w-[180px]" title={value}>
-          {value || "N/A"}
-        </span>
-      ),
-    },
-    {
       key: "photoUrl",
       label: "Photo",
       width: "80px",
       render: (value) =>
         value ? (
           <img
-            src={Api.getSkinImage(value)}
+            src={value}
             alt="skin"
             className="w-10 h-10 object-cover rounded"
           />
@@ -61,11 +46,21 @@ const AnalysisPage = () => {
         ),
     },
     {
+      key: "email",
+      label: "Email",
+      width: "200px",
+      render: (value) => (
+        <span className="block truncate" title={value}>
+          {value || "N/A"}
+        </span>
+      ),
+    },
+    {
       key: "conditionName",
       label: "Condition",
       width: "160px",
       render: (value) => (
-        <span className="block truncate max-w-[140px]" title={value}>
+        <span className="block truncate" title={value}>
           {value || "N/A"}
         </span>
       ),
@@ -110,13 +105,19 @@ const AnalysisPage = () => {
       key: "createdAt",
       label: "Created At",
       width: "120px",
-      render: (value) => value || "-",
+      render: (value) => {
+        if (!value) return "-";
+        return new Date(value).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      },
     },
     {
-      key: "updatedAt",
-      label: "Updated At",
-      width: "120px",
-      render: (value) => value || "-",
+      key: "id",
+      label: "ID",
+      width: "80px",
     },
   ];
 

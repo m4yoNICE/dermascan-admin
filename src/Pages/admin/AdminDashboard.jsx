@@ -69,25 +69,20 @@ function List({ items, renderItem }) {
 }
 
 function ProductColumn({ title, products }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
-
-  const totalPages = Math.ceil(products.length / itemsPerPage);
-
-  const paginatedProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   return (
     <div className="w-full">
       <h4 className="bg-emerald-500 text-white text-center py-1 rounded-lg mb-2 text-sm">
         {title}
       </h4>
-      <div className="flex flex-wrap gap-2 justify-start">
-        {paginatedProducts.length > 0 ? (
-          paginatedProducts.map((p) => (
-            <div key={p.productId} className="flex flex-col items-center w-20">
+
+      {/* horizontal scroll */}
+      <div className="flex gap-2 overflow-x-auto overflow-y-hidden pb-2 touch-pan-x scroll-smooth">
+        {products.length > 0 ? (
+          products.map((p) => (
+            <div
+              key={p.productId}
+              className="flex flex-col items-center min-w-[80px]"
+            >
               <img
                 src={p.image}
                 alt={p.name}
@@ -100,28 +95,6 @@ function ProductColumn({ title, products }) {
           <p className="text-sm text-gray-400">No products</p>
         )}
       </div>
-
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-2">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-            className="px-2 py-1 border rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span>
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((p) => p + 1)}
-            className="px-2 py-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      )}
     </div>
   );
 }
@@ -145,6 +118,7 @@ export default function AdminDashboard() {
   const productImages = useSelector(
     (state) => state.products.getAllProductImages || []
   );
+  const [detectedConditions, setDetectedConditions] = useState([]);
 
   const [scanData, setScanData] = useState(0);
   const [noRecommendationData, setNoRecommendationData] = useState(0);
@@ -164,7 +138,7 @@ export default function AdminDashboard() {
         const res = await Api.fetchScansPerDay();
         const total = res.data.reduce(
           (sum, item) => sum + Number(item.count),
-          0
+          0,
         );
         setScanData(total);
       } catch (error) {
@@ -187,12 +161,18 @@ export default function AdminDashboard() {
     fetchNoRecommendation();
   }, []);
 
+  useEffect(() => {
+    Api.getConditions()
+      .then((res) => setDetectedConditions(res.data))
+      .catch(console.error);
+  }, []);
+
   const uniqueProducts = useMemo(
     () =>
       Array.from(
-        new Map(productImages.map((item) => [item.productId, item])).values()
+        new Map(productImages.map((item) => [item.productId, item])).values(),
       ),
-    [productImages]
+    [productImages],
   );
 
   const popularProducts = useMemo(() => {
@@ -223,18 +203,19 @@ export default function AdminDashboard() {
 
   const selectedProductIds = useMemo(
     () => popularProducts.map((p) => p.productId),
-    [popularProducts]
+    [popularProducts],
   );
 
   const selectedProducts = useMemo(
-    () => uniqueProducts.filter((p) => selectedProductIds.includes(p.productId)),
-    [uniqueProducts, selectedProductIds]
+    () =>
+      uniqueProducts.filter((p) => selectedProductIds.includes(p.productId)),
+    [uniqueProducts, selectedProductIds],
   );
 
   const nonSelectedProducts = useMemo(
     () =>
       uniqueProducts.filter((p) => !selectedProductIds.includes(p.productId)),
-    [uniqueProducts, selectedProductIds]
+    [uniqueProducts, selectedProductIds],
   );
 
   const stats = [
@@ -267,7 +248,10 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <ProductColumn title="Selected" products={selectedProducts} />
-              <ProductColumn title="Non-Selected" products={nonSelectedProducts} />
+              <ProductColumn
+                title="Non-Selected"
+                products={nonSelectedProducts}
+              />
             </div>
           </CardContent>
         </Card>
@@ -282,9 +266,13 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="overflow-y-auto max-h-60 pr-1">
               <List
-                items={skinConditions}
+                items={detectedConditions}
                 renderItem={(item, i) => (
-                  <KeyValueItem key={i} left={item.conditon} right="-" />
+                  <KeyValueItem
+                    key={i}
+                    left={item.condition}
+                    right={item.count}
+                  />
                 )}
               />
             </div>
@@ -299,7 +287,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <h3 className="font-semibold">Users</h3>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 max-h-80 overflow-y-auto pr-1">
             {status === "loading" ? (
               <p>Loading users...</p>
             ) : Users.length === 0 ? (

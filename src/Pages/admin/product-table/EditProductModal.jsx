@@ -25,6 +25,7 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
     availableIn: "",
     skinType: "",
     dermaTested: false,
+    routine: "",
     timeRoutine: "",
     conditionIds: [],
   });
@@ -43,6 +44,7 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
         availableIn: product.availableIn || "",
         skinType: product.skinType || "",
         dermaTested: product.dermaTested || false,
+        routine: product.routine || "",
         timeRoutine: product.timeRoutine || "",
         conditionIds: product.conditionIds || [],
       });
@@ -314,6 +316,19 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
               <option value="Night">Night</option>
               <option value="Morning, Night">Morning & Night</option>
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Routine Label
+            </label>
+            <input
+              type="text"
+              name="routine"
+              value={formData.routine}
+              onChange={handleChange}
+              placeholder="e.g. Foam Cleanser, Cream Moisturizer"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00CC99] focus:border-transparent"
+            />
           </div>
 
           <div className="flex items-center gap-3">
