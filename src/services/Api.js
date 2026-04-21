@@ -83,6 +83,8 @@ const Api = {
   // Get all product images for dashboard stats
   getAllProductImages: () =>
     Http.get("/api/admin/products/getAllProductImages"),
+  getProductRecommendationStats: () =>
+    Http.get("/api/admin/products/getProductRecommendationStats"),
 
   // Generate reports endpoint
   generateProductReport: () => {

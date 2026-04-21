@@ -56,7 +56,7 @@ const editUserPageModal = ({ isOpen, onClose, user }) => {
       first_name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      role_id: formData.roleId,
+      role_id: Number(formData.roleId),
       birthdate: formData.birthdate,
     };
 

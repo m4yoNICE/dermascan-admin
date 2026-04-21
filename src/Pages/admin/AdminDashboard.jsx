@@ -7,6 +7,7 @@ import {
   getConditionCountsByProduct,
   getAllProductImages,
   fetchProducts,
+  getProductRecommendationStats,
 } from "../../redux/slices/skinProductSlice.js";
 import Api from "../../services/Api.js";
 
@@ -107,16 +108,19 @@ export default function AdminDashboard() {
   const userCount = Users.length;
   const status = useSelector((state) => state.user?.status);
   const skinConditions = useSelector(
-    (state) => state.skinType?.skinConditions || []
+    (state) => state.skinType?.skinConditions || [],
   );
   const conditionCounts = useSelector(
-    (state) => state.products?.getConditionCounts || []
+    (state) => state.products?.getConditionCounts || [],
   );
   const conditionProduct = useSelector(
-    (state) => state.products.getConditionCountsByProduct || []
+    (state) => state.products.getConditionCountsByProduct || [],
   );
   const productImages = useSelector(
-    (state) => state.products.getAllProductImages || []
+    (state) => state.products.getAllProductImages || [],
+  );
+  const recommendationStats = useSelector(
+    (state) => state.products.getProductRecommendationStats || [],
   );
   const [detectedConditions, setDetectedConditions] = useState([]);
 
@@ -130,6 +134,7 @@ export default function AdminDashboard() {
     dispatch(fetchProducts());
     dispatch(getConditionCountsByProduct());
     dispatch(getAllProductImages());
+    dispatch(getProductRecommendationStats());
   }, [dispatch]);
 
   useEffect(() => {
@@ -167,55 +172,64 @@ export default function AdminDashboard() {
       .catch(console.error);
   }, []);
 
-  const uniqueProducts = useMemo(
-    () =>
-      Array.from(
-        new Map(productImages.map((item) => [item.productId, item])).values(),
-      ),
-    [productImages],
-  );
+  // const uniqueProducts = useMemo(
+  //   () =>
+  //     Array.from(
+  //       new Map(productImages.map((item) => [item.productId, item])).values(),
+  //     ),
+  //   [productImages],
+  // );
 
-  const popularProducts = useMemo(() => {
-    if (!conditionCounts.length || !conditionProduct.length) return [];
+  // const popularProducts = useMemo(() => {
+  //   if (!conditionCounts.length || !conditionProduct.length) return [];
 
-    const productMap = {};
+  //   const productMap = {};
 
-    conditionProduct.forEach((cp) => {
-      const count =
-        conditionCounts.find((c) => c.conditionId === cp.conditionId)?.count ||
-        0;
+  //   conditionProduct.forEach((cp) => {
+  //     const count =
+  //       conditionCounts.find((c) => c.conditionId === cp.conditionId)?.count ||
+  //       0;
 
-      if (!productMap[cp.productId]) {
-        productMap[cp.productId] = {
-          productId: cp.productId,
-          name: cp.productName,
-          score: 0,
-        };
-      }
+  //     if (!productMap[cp.productId]) {
+  //       productMap[cp.productId] = {
+  //         productId: cp.productId,
+  //         name: cp.productName,
+  //         score: 0,
+  //       };
+  //     }
 
-      productMap[cp.productId].score += count;
-    });
+  //     productMap[cp.productId].score += count;
+  //   });
 
-    return Object.values(productMap)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
-  }, [conditionCounts, conditionProduct]);
+  //   return Object.values(productMap)
+  //     .sort((a, b) => b.score - a.score)
+  //     .slice(0, 3);
+  // }, [conditionCounts, conditionProduct]);
 
-  const selectedProductIds = useMemo(
-    () => popularProducts.map((p) => p.productId),
-    [popularProducts],
-  );
+  // const selectedProductIds = useMemo(
+  //   () => popularProducts.map((p) => p.productId),
+  //   [popularProducts],
+  // );
 
+  // const selectedProducts = useMemo(
+  //   () =>
+  //     uniqueProducts.filter((p) => selectedProductIds.includes(p.productId)),
+  //   [uniqueProducts, selectedProductIds],
+  // );
+
+  // const nonSelectedProducts = useMemo(
+  //   () =>
+  //     uniqueProducts.filter((p) => !selectedProductIds.includes(p.productId)),
+  //   [uniqueProducts, selectedProductIds],
+  // );
   const selectedProducts = useMemo(
-    () =>
-      uniqueProducts.filter((p) => selectedProductIds.includes(p.productId)),
-    [uniqueProducts, selectedProductIds],
+    () => recommendationStats.filter((p) => p.selected),
+    [recommendationStats],
   );
 
   const nonSelectedProducts = useMemo(
-    () =>
-      uniqueProducts.filter((p) => !selectedProductIds.includes(p.productId)),
-    [uniqueProducts, selectedProductIds],
+    () => recommendationStats.filter((p) => !p.selected),
+    [recommendationStats],
   );
 
   const stats = [
@@ -312,9 +326,13 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <List
-              items={popularProducts}
+              items={selectedProducts}
               renderItem={(item, i) => (
-                <KeyValueItem key={i} left={item.name} right={item.score} />
+                <KeyValueItem
+                  key={i}
+                  left={item.name}
+                  right={item.recommendationCount}
+                />
               )}
             />
           </CardContent>

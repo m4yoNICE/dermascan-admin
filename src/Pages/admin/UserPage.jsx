@@ -125,7 +125,10 @@ const UserPage = () => {
         <div className="flex gap-2">
           {/* Edit Button */}
           <button
-            onClick={() => setSelectedUser(row) || setIsEditModalOpen(true)}
+            onClick={() => {
+              setSelectedUser(row);
+              setIsEditModalOpen(true);
+            }}
             className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
             title="Edit user"
           >

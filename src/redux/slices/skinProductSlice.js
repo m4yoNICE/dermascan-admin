@@ -110,6 +110,19 @@ export const getAllProductImages = createAsyncThunk(
       });
   },
 );
+export const getProductRecommendationStats = createAsyncThunk(
+  "products/getProductRecommendationStats",
+  (_, { rejectWithValue }) => {
+    return Api.getProductRecommendationStats()
+      .then((response) => response.data)
+      .catch((err) => {
+        return rejectWithValue(
+          err.response?.data?.message ||
+            "Failed to fetch recommendation stats.",
+        );
+      });
+  },
+);
 
 //initial state
 const initialState = {
@@ -249,6 +262,16 @@ const skinProductSlice = createSlice({
       })
       .addCase(getAllProductImages.rejected, (state, action) => {
         state.getAllProductImages = [];
+      })
+      // GET PRODUCT RECOMMENDATION STATS
+      .addCase(getProductRecommendationStats.pending, (state) => {
+        state.getProductRecommendationStats = [];
+      })
+      .addCase(getProductRecommendationStats.fulfilled, (state, action) => {
+        state.getProductRecommendationStats = action.payload.data;
+      })
+      .addCase(getProductRecommendationStats.rejected, (state) => {
+        state.getProductRecommendationStats = [];
       });
   },
 });

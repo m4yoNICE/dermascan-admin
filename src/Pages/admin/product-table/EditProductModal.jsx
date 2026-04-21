@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, updateProduct } from "@/redux/slices/skinProductSlice";
-import { fetchConditions } from "@/redux/slices/conditionSlice";
+import { getSkinConditions } from "@/redux/slices/skinTypeSlice";
 import { buildProductFormData } from "@/utils/Forms";
 import { X } from "lucide-react";
 import Api from "@/services/Api";
@@ -9,8 +9,8 @@ import { SKIN_TYPES } from "@/constants/skinTypes";
 
 const EditProductModal = ({ isOpen, onClose, product }) => {
   const dispatch = useDispatch();
-  const { data: conditions = [] } = useSelector(
-    (state) => state.conditions || {},
+  const conditions = useSelector(
+    (state) => state.skinType?.skinConditions || [],
   );
 
   const [formData, setFormData] = useState({
@@ -52,7 +52,7 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
   }, [product]);
 
   useEffect(() => {
-    dispatch(fetchConditions());
+    dispatch(getSkinConditions());
   }, [dispatch]);
 
   useEffect(() => {
