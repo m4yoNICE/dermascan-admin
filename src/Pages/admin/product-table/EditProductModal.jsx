@@ -27,6 +27,7 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
     dermaTested: false,
     routine: "",
     timeRoutine: "",
+    price: "",
     conditionIds: [],
   });
 
@@ -46,6 +47,7 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
         dermaTested: product.dermaTested || false,
         routine: product.routine || "",
         timeRoutine: product.timeRoutine || "",
+        price: product.price || "",
         conditionIds: product.conditionIds || [],
       });
     }
@@ -242,6 +244,20 @@ const EditProductModal = ({ isOpen, onClose, product }) => {
               value={formData.ingredient}
               onChange={handleChange}
               placeholder="e.g. Salicylic Acid, Niacinamide"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00CC99] focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Price Range
+            </label>
+            <input
+              type="text"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              placeholder="e.g. 640-1050"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00CC99] focus:border-transparent"
             />
           </div>
