@@ -5,7 +5,7 @@ import SearchBar from "@/components/SearchBar";
 import DeleteModal from "@/components/DeleteModal";
 import EditUserPageModal from "@/components/editUserPageModal";
 import { deleteUser, fetchUsers } from "@/redux/slices/userSlice";
-import { Trash2,Pencil } from "lucide-react";
+import { Trash2,Pencil,FileText } from "lucide-react";
 import Api from "@/services/Api";
 
 const UserPage = () => {
@@ -123,6 +123,7 @@ const UserPage = () => {
       sortable: false,
       render: (value, row) => (
         <div className="flex gap-2">
+
           {/* Edit Button */}
           <button
             onClick={() => {
@@ -143,35 +144,41 @@ const UserPage = () => {
           >
             <Trash2 className="w-4 h-4" />
           </button>
+
+          {/* Report Button */}
+          <button
+            onClick={() => handleGenerateUserReport(row.id)}
+            className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors"
+            title="User Report"
+          >
+            <FileText className="w-4 h-4" />
+          </button>
+
         </div>
       ),
-    },
+    }
   ];
 
-  const handleGenerateUserReport = async () => {
-  const res = await Api.generateUserReport({ responseType: "blob" });
-  const url = window.URL.createObjectURL(new Blob([res.data]));
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", "user-report.pdf");
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-}
+  const handleGenerateUserReport = async (userId) => {
+  try {
+    const res = await Api.generateUserReport(userId, { responseType: "blob" }); // ← add blob
+
+    const url = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `user-${userId}-report.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url); // ← cleanup memory
+  } catch (err) {
+    console.error("Failed to generate user report:", err);
+    alert("Failed to generate report. Please try again.");
+  }
+};
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Users Management</h1>
-        <button
-          onClick={handleGenerateUserReport}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-xl shadow-sm hover:bg-blue-600 active:scale-95 transition-all"
-        >
-          📄 Generate Users Report
-        </button>
-      </div>
-
       {/* Search Bar */}
       <div className="mb-6">
         <SearchBar

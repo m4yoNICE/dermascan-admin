@@ -92,8 +92,8 @@ const Api = {
       responseType: "blob",
     });
   },
-  generateUserReport: () => {
-    return Http.get("/api/admin/reports/generate/user", {
+  generateUserReport: (userId) => {
+    return Http.get(`/api/admin/reports/generate/user/${userId}`, {
       responseType: "blob",
     });
   },

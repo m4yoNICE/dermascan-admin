@@ -138,20 +138,24 @@ export default function AdminDashboard() {
   }, [dispatch]);
 
   useEffect(() => {
-    const fetchScanPerDay = async () => {
-      try {
-        const res = await Api.fetchScansPerDay();
-        const total = res.data.reduce(
-          (sum, item) => sum + Number(item.count),
-          0,
-        );
-        setScanData(total);
-      } catch (error) {
-        console.error("Error fetching scans per day:", error);
-      }
-    };
-    fetchScanPerDay();
-  }, []);
+      const fetchScanPerDay = async () => {
+        try {
+          const res = await Api.fetchScansPerDay();
+
+          const today = new Date().toISOString().split("T")[0];
+
+          const todayData = res.data.find(
+            (item) => item.date === today
+          );
+
+          setScanData(todayData ? Number(todayData.count) : 0);
+        } catch (error) {
+          console.error("Error fetching scans per day:", error);
+        }
+      };
+
+      fetchScanPerDay();
+    }, []);
 
   useEffect(() => {
     const fetchNoRecommendation = async () => {
@@ -238,11 +242,17 @@ export default function AdminDashboard() {
     { title: "Out of Scope", value: noRecommendationData },
   ];
 
+  // Dynamic user name
+  const authUser = JSON.parse(localStorage.getItem("user"));
+
+  const currentUser = Users.find((u) => u.id === authUser?.id);
   return (
     <div className="min-h-screen bg-gray-100 p-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Welcome back, Admin</h2>
+        <h2 className="text-xl font-semibold">
+          Welcome back, {currentUser?.firstName || "Admin"}
+        </h2>
       </div>
 
       {/* Stats */}
